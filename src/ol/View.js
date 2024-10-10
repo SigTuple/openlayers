@@ -83,7 +83,7 @@ import {fromExtent as polygonFromExtent} from './geom/Polygon.js';
  * padding.
  * @property {boolean} [nearest=false] If the view `constrainResolution` option is `true`,
  * get the nearest extent instead of the closest that actually fits the view.
- * @property {number} [minResolution=0] Minimum resolution that we zoom to.
+ * @property {number} [minResolution=0.5] Minimum resolution that we zoom to.
  * @property {number} [maxZoom] Maximum zoom level that we zoom to. If
  * `minResolution` is given, this property is ignored.
  * @property {number} [duration] The duration of the animation in milliseconds.
@@ -1700,7 +1700,12 @@ class View extends BaseObject {
    * @api
    */
   setZoom(zoom) {
-    this.setResolution(this.getResolutionForZoom(zoom));
+    if(zoom >= 10){
+      this.setResolution(0.5);
+    }
+    else {
+      this.setResolution(this.getResolutionForZoom(zoom));
+    }
   }
 
   /**
@@ -1996,10 +2001,7 @@ export function createResolutionConstraint(options) {
   if (options.resolutions !== undefined) {
     const resolutions = options.resolutions;
     maxResolution = resolutions[minZoom];
-    minResolution =
-      resolutions[maxZoom] !== undefined
-        ? resolutions[maxZoom]
-        : resolutions[resolutions.length - 1];
+    minResolution = 0.5;
 
     if (options.constrainResolution) {
       resolutionConstraint = createSnapToResolutions(
@@ -2059,7 +2061,7 @@ export function createResolutionConstraint(options) {
       Math.floor(
         Math.log(maxResolution / minResolution) / Math.log(zoomFactor),
       );
-    minResolution = maxResolution / Math.pow(zoomFactor, maxZoom - minZoom);
+    minResolution = 0.5;
 
     if (options.constrainResolution) {
       resolutionConstraint = createSnapToPower(
