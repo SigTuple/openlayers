@@ -1310,22 +1310,22 @@ class View extends BaseObject {
    * @api
    */
   getResolutionForZoom(zoom) {
-    if (this.resolutions_?.length) {
-      if (this.resolutions_.length === 1) {
-        return this.resolutions_[0];
-      }
-      const baseLevel = clamp(
-        Math.floor(zoom),
-        0,
-        this.resolutions_.length - 2,
-      );
-      const zoomFactor =
-        this.resolutions_[baseLevel] / this.resolutions_[baseLevel + 1];
-      return (
-        this.resolutions_[baseLevel] /
-        Math.pow(zoomFactor, clamp(zoom - baseLevel, 0, 1))
-      );
-    }
+    // if (this.resolutions_?.length) {
+    //   if (this.resolutions_.length === 1) {
+    //     return this.resolutions_[0];
+    //   }
+    //   const baseLevel = clamp(
+    //     Math.floor(zoom),
+    //     0,
+    //     this.resolutions_.length - 2,
+    //   );
+    //   const zoomFactor =
+    //     this.resolutions_[baseLevel] / this.resolutions_[baseLevel + 1];
+    //   return (
+    //     this.resolutions_[baseLevel] /
+    //     Math.pow(zoomFactor, clamp(zoom - baseLevel, 0, 1))
+    //   );
+    // }
     return (
       this.maxResolution_ / Math.pow(this.zoomFactor_, zoom - this.minZoom_)
     );
@@ -1700,12 +1700,7 @@ class View extends BaseObject {
    * @api
    */
   setZoom(zoom) {
-    if(zoom >= 10){
-      this.setResolution(0.5);
-    }
-    else {
       this.setResolution(this.getResolutionForZoom(zoom));
-    }
   }
 
   /**
